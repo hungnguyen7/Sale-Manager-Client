@@ -21,17 +21,13 @@ export const getToken=()=>{
 //     setTimeout(()=>removeUserSession(), 1000*60*60*3)
 // }
 
-// export const postDataToServer=async (link ,data)=>{
-//     await axios.post(link,data,{
-//         headers:{
-//             'Authorization': `Bearer ${getToken()}`
-//         }
-//     }).then(res=>{
-//         alert("Success")
-//     }).catch(error=>{
-//         alert(error.response.data.message)
-//     })
-// }
+export const postDataToServer=async (link, data)=>{
+    await axios.post(process.env.REACT_APP_API_URL+link,data).then(res=>{
+        console.log(res)
+    }).catch(error=>{
+        alert(error.response.data.message)
+    })
+}
 // export const patchDataToServer=async (link ,data)=>{
 //     await axios.patch(link,data,{
 //         headers:{
@@ -53,7 +49,7 @@ export const getDataFromServer=async(link)=>{
 }
 export const deleteDataFromServer=async (link)=>{
     await axios.delete(process.env.REACT_APP_API_URL+link).then(res=>{
-        console.log(res)
+        // console.log(res)
     }).catch(error=>{
         console.log(error)
     })
