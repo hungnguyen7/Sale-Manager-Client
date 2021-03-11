@@ -1,16 +1,5 @@
 import {useState} from 'react'
 
-
-export const ModalState=()=>{
-    const [showModal, setShowModal]=useState(false);
-    const handleClose=()=> setShowModal(false)
-    const handleShow=()=> setShowModal(true)
-    return {
-        state: showModal,
-        handleClose,
-        handleShow
-    }
-}
 export const TextAlert=()=>{
     const [textAlert, setTextAlert]=useState(false)
     const handleClose=()=> setTextAlert(false)
@@ -27,5 +16,13 @@ export const UpdateData=()=>{
     return{
         updateState,
         updateIt
+    }
+}
+
+export const Product=()=>{
+    const [id, setId]=useState('')
+    return{
+        id, 
+        setId
     }
 }

@@ -28,17 +28,13 @@ export const postDataToServer=async (link, data)=>{
         alert(error.response.data.message)
     })
 }
-// export const patchDataToServer=async (link ,data)=>{
-//     await axios.patch(link,data,{
-//         headers:{
-//             'Authorization': `Bearer ${getToken()}`
-//         }
-//     }).then(res=>{
-//         alert("Success")
-//     }).catch(error=>{
-//         alert('Something wrong, try again')
-//     })
-// }
+export const patchDataToServer=async (link ,data)=>{
+    await axios.patch(process.env.REACT_APP_API_URL+link, data).then(res=>{
+        console.log(res)
+    }).catch(error=>{
+        console.log(error)
+    })
+}
 export const getDataFromServer=async(link)=>{
     let data = await axios.get(process.env.REACT_APP_API_URL+link).then(res=>{
         return res;

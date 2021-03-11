@@ -13,7 +13,7 @@ class App extends React.Component{
           <BrowserRouter>
             <Navbar bg="light" expand="lg">
             <LinkContainer to = '/'>
-              <Navbar.Brand>Brand name</Navbar.Brand>
+              <Navbar.Brand>Develop by Hung Nguyen</Navbar.Brand>
             </LinkContainer>
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
