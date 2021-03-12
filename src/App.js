@@ -6,6 +6,7 @@ import PublicRoute from './Utils/PublicRoute'
 import {Navbar, Nav} from 'react-bootstrap';
 
 import WareHouse from './Components/WareHouse'
+import Customer from './Components/Customer'
 class App extends React.Component{
   render(){
     return(
@@ -18,11 +19,11 @@ class App extends React.Component{
               <Navbar.Toggle aria-controls="basic-navbar-nav" />
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                  <LinkContainer to = "/buyer">
+                  {/* <LinkContainer to = "/buyer">
                     <Nav.Link>Người mua</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to = '/seller'>
-                    <Nav.Link>Người bán</Nav.Link>
+                  </LinkContainer> */}
+                  <LinkContainer to = '/customer'>
+                    <Nav.Link>Khách hàng</Nav.Link>
                   </LinkContainer>
                   <LinkContainer to = "/warehouse">
                     <Nav.Link>Kho</Nav.Link>
@@ -32,6 +33,7 @@ class App extends React.Component{
             </Navbar>
             <Switch>
               <PublicRoute path='/warehouse' component={WareHouse}/>
+              <PublicRoute path='/customer' component={Customer}/>
             </Switch>
           </BrowserRouter>
       </div>
