@@ -1,7 +1,8 @@
-import {useState} from 'react'
-import {Button, Col, Modal, Form} from 'react-bootstrap'
+import {useState, useEffect} from 'react'
+import {Button, Row, Col, Modal, Form, Container, Card, Badge} from 'react-bootstrap'
 import {useForm} from 'react-hook-form'
 
+import {getDataFromServer} from './Common'
 export const ModalForm = ()=>{
     const [showModal, setShowModal]=useState(false);
     const {handleSubmit, register} = useForm()
@@ -75,6 +76,80 @@ export const ModalAlert=()=>{
         state: showModal,
         handleClose,
         handleShow,
+        getComponent
+    }
+}
+
+export const ModalInvoice=()=>{
+    const [showModal, setShowModal]=useState(false);
+    const [cart, setCart] = useState([])
+    // const [productDetail, setProductDetail] = useState([])
+    const {handleSubmit, register} = useForm()
+    const handleClose=()=> setShowModal(false)
+    const handleShow=()=> setShowModal(true)
+    // useEffect(()=>{
+    //     const getCustomerCart=async()=>{
+    //         cart.map(async value=>{
+    //             let data = await getDataFromServer(`/api/product/${value.productId._id}`)
+    //             setProductDetail(productDetail=>[...productDetail, data.data])
+    //         })
+    //     }
+    //     getCustomerCart()
+    // }, [cart])
+    // console.log(productDetail)
+    // console.log(cart)
+    const getComponent=()=>{
+        return(
+            <Modal animation={false} show={showModal} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Hóa đơn</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Container>
+                   <Badge variant='warning'>Mua vào</Badge>
+                   <Container className='border border-warning'>
+                       {cart.filter(value=>value.buyInto===true).map((value, index)=>{
+                           return(
+                               <Container key={index} className='border-bottom'>
+                                   <Row><Card.Title className='bg-warning'>{value.productId.name}</Card.Title></Row>
+                                   <Row>
+                                       <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
+                                       <Card.Text>Khối lượng: {value.amount}</Card.Text>
+                                       <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
+                                       <Button variant='danger' className='ml-1 btn-sm mb-2'>Xóa</Button>
+                                   </Row>
+                               </Container>
+                           )
+                       })}
+                   </Container>
+                </Container>
+                <Container>
+                   <Badge variant='success'>Bán ra</Badge>
+                   <Container className='border border-success'>
+                       {cart.filter(value=>value.buyInto===false).map((value, index)=>{
+                           return(
+                               <Container key={index} className='border-bottom'>
+                                   <Row><Card.Title className='bg-success'>{value.productId.name}</Card.Title></Row>
+                                   <Row>
+                                       <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
+                                       <Card.Text>Khối lượng: {value.amount}</Card.Text>
+                                       <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
+                                       <Button variant='danger' className='ml-1 btn-sm mb-2'>Xóa</Button>
+                                   </Row>
+                               </Container>
+                           )
+                       })}
+                   </Container>
+                </Container>
+            </Modal.Body>
+            </Modal>
+        )
+    }
+    return{
+        state: showModal,
+        handleClose,
+        handleShow,
+        setCart,
         getComponent
     }
 }
