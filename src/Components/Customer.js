@@ -27,6 +27,7 @@ const Customer=()=>{
     }
 
     const getCustomerCart=async id =>{
+        console.log(id)
         let data = await getDataFromServer(`/api/customer/${id}/cart`)
         modalInvoice.setCart(data.data)
     }
@@ -41,8 +42,15 @@ const Customer=()=>{
                                     <Card.Body>
                                         <Row>
                                             <Card.Title>{customer.name}</Card.Title>
-                                            <Button variant='info' className='ml-auto' onClick={()=>{modalInvoice.handleShow(); getCustomerCart(customer._id)}}>Xem hoá đơn</Button>
-                                            <Button variant='danger' className='ml-2' onClick={()=>{modalAlert.handleShow(); setCustomer(customer._id)}}>Xóa</Button>
+                                            <Button variant='info' className='ml-auto' onClick={()=>{
+                                                modalInvoice.handleShow()
+                                                getCustomerCart(customer._id)
+                                                setCustomer(customer._id)
+                                            }}>Xem hoá đơn</Button>
+                                            <Button variant='danger' className='ml-2' onClick={()=>{
+                                                modalAlert.handleShow()
+                                                setCustomer(customer._id)
+                                            }}>Xóa</Button>
                                         </Row>
                                         <Card.Text>Address</Card.Text>
                                         <Card.Text>Phone: {Math.random()}</Card.Text>
@@ -55,7 +63,7 @@ const Customer=()=>{
                 )
             })}
         {modalAlert.getComponent('Thông báo', 'Bạn có chắc chắn muốn xóa khách hàng và toàn bộ đơn hàng của khách hàng này không?', ()=>handleDeleteCustomer(customer))}
-        {modalInvoice.getComponent()}
+        {modalInvoice.getComponent(()=>getCustomerCart(customer))}
         </Container>
     )
 }

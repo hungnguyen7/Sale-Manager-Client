@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {Button, Row, Col, Modal, Form, Container, Card, Badge} from 'react-bootstrap'
 import {useForm} from 'react-hook-form'
 
-import {getDataFromServer} from './Common'
+import {deleteDataFromServer, getDataFromServer} from './Common'
 export const ModalForm = ()=>{
     const [showModal, setShowModal]=useState(false);
     const {handleSubmit, register} = useForm()
@@ -83,64 +83,20 @@ export const ModalAlert=()=>{
 export const ModalInvoice=()=>{
     const [showModal, setShowModal]=useState(false);
     const [cart, setCart] = useState([])
-    // const [productDetail, setProductDetail] = useState([])
+
     const {handleSubmit, register} = useForm()
     const handleClose=()=> setShowModal(false)
     const handleShow=()=> setShowModal(true)
-    // useEffect(()=>{
-    //     const getCustomerCart=async()=>{
-    //         cart.map(async value=>{
-    //             let data = await getDataFromServer(`/api/product/${value.productId._id}`)
-    //             setProductDetail(productDetail=>[...productDetail, data.data])
-    //         })
-    //     }
-    //     getCustomerCart()
-    // }, [cart])
-    // console.log(productDetail)
-    // console.log(cart)
-    const getComponent=()=>{
+
+    const getComponent=(updateUserCart)=>{
         return(
             <Modal animation={false} show={showModal} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Hóa đơn</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Container>
-                   <Badge variant='warning'>Mua vào</Badge>
-                   <Container className='border border-warning'>
-                       {cart.filter(value=>value.buyInto===true).map((value, index)=>{
-                           return(
-                               <Container key={index} className='border-bottom'>
-                                   <Row><Card.Title className='bg-warning'>{value.productId.name}</Card.Title></Row>
-                                   <Row>
-                                       <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
-                                       <Card.Text>Khối lượng: {value.amount}</Card.Text>
-                                       <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
-                                       <Button variant='danger' className='ml-1 btn-sm mb-2'>Xóa</Button>
-                                   </Row>
-                               </Container>
-                           )
-                       })}
-                   </Container>
-                </Container>
-                <Container>
-                   <Badge variant='success'>Bán ra</Badge>
-                   <Container className='border border-success'>
-                       {cart.filter(value=>value.buyInto===false).map((value, index)=>{
-                           return(
-                               <Container key={index} className='border-bottom'>
-                                   <Row><Card.Title className='bg-success'>{value.productId.name}</Card.Title></Row>
-                                   <Row>
-                                       <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
-                                       <Card.Text>Khối lượng: {value.amount}</Card.Text>
-                                       <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
-                                       <Button variant='danger' className='ml-1 btn-sm mb-2'>Xóa</Button>
-                                   </Row>
-                               </Container>
-                           )
-                       })}
-                   </Container>
-                </Container>
+                <Product type={1} data={cart} updateCart={updateUserCart}/>
+                <Product type={2} data={cart} updateCart={updateUserCart}/>
             </Modal.Body>
             </Modal>
         )
@@ -152,4 +108,32 @@ export const ModalInvoice=()=>{
         setCart,
         getComponent
     }
+}
+
+const Product=(props)=>{
+    let {type, data, updateCart} = props
+    const deleteDeal= async (dealId)=>{
+        await deleteDataFromServer(`/api/customer/cart/${dealId}`)
+        updateCart()
+    }
+    return(
+        <Container>
+            <Badge variant={type===1?'warning':'success'}>{type===1?'Mua vào':'Bán ra'}</Badge>
+            <Container className='border border-success'>
+            {data.filter(value=>type===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
+                    return(
+                        <Container key={index} className='border-bottom'>
+                            <Row><Card.Title className={type===1?'bg-warning':'bg-success'}>{value.productId.name}</Card.Title></Row>
+                            <Row>
+                                <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
+                                <Card.Text>Khối lượng: {value.amount}</Card.Text>
+                                <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
+                                <Button variant='danger' className='ml-1 btn-sm mb-2' onClick={()=>deleteDeal(value._id)}>Xóa</Button>
+                            </Row>
+                        </Container>
+                    )
+                })}
+            </Container>
+        </Container>
+    )
 }
