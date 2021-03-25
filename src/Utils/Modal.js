@@ -24,8 +24,6 @@ export const ModalForm = ()=>{
                                 ))}
                         </Form.Group>
                     </Form.Row>}
-                    <Form.Label>Khối lượng</Form.Label>
-                    <Form.Control min='0' type='number' placeholder='Nhập khối lượng' name='amount' ref={register()}></Form.Control>
                     <Form.Label>Giá mua vào</Form.Label>
                     <Form.Control min='0' type='number' placeholder='Nhập giá mua vào' name='purchasePrice' ref={register()}></Form.Control>
                     <Form.Label>Giá bán ra</Form.Label>
@@ -140,10 +138,10 @@ const Product=(props)=>{
         <Container>
             <Badge variant={type===1?'warning':'success'}>{type===1?'Mua vào':'Bán ra'}</Badge>
             <Container className='border border-success'>
-            <Container>
+            <Container className='bg-light pt-3'>
             <Form onSubmit={handleSubmit(onSubmit)}><Row>
-                <Col><Form.Group>
-                        <Form.Control as='select' size='sm' custom onChange={handleChange}>
+                <Col xs={4}><Form.Group>
+                        <Form.Control as='select' size='sm' required custom onChange={handleChange}>
                             <option>--Chọn sản phẩm--</option>
                             {product.map((value, index)=>{
                                 return(
@@ -153,7 +151,7 @@ const Product=(props)=>{
                         </Form.Control>
                     </Form.Group></Col>
                     <Col><Form.Group>
-                        <Form.Control as='select' size='sm' name='type' custom ref={register()}>
+                        <Form.Control as='select' size='sm' name='type' required custom ref={register()}>
                             {selectedProduct?selectedProduct.classification.map((value, index)=>{
                                 return <option key={index} value={value.type}>{value.type}</option>
                             }):<option>--Loại--</option>}

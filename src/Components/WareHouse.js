@@ -56,7 +56,6 @@ const WareHouse=()=>{
     }
 
     const onEditType=async data=>{
-        data.amount = parseInt(data.amount)
         data.purchasePrice = parseInt(data.purchasePrice)
         data.salePrice = parseInt(data.purchasePrice)
         data.type = parseInt(product.type)
@@ -113,7 +112,7 @@ const WareHouse=()=>{
             {modalAlert.getComponent('Thông báo', 'Bạn có muốn xóa hoàn toàn sản phẩm không?', ()=> handleDeleteProduct(product.id))}
             {modalForm.getComponent('Thêm loại sản phẩm', 'Thêm', false, onAddType)}
             {modalAlertForTypeOfProduct.getComponent('Thông báo', 'Bạn có muốn xóa loại sản phẩm này không?', ()=>handleDeleteType(product))}
-            {modalFormForTypeOfProduct.getComponent('Sửa loại sản phẩm', 'Sửa', true, onEditType)}
+            {modalFormForTypeOfProduct.getComponent('Sửa giá sản phẩm', 'Sửa', true, onEditType)}
         </Container>
     )
 }
