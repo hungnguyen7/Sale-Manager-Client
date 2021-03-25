@@ -158,7 +158,7 @@ const Product=(props)=>{
                         </Form.Control>
                     </Form.Group></Col>
                     <Col><FormGroup>
-                    <Form.Control type='number' min='0' placeholder='Nhập số lượng' name='amount' custom ref={register()} required></Form.Control>
+                    <Form.Control type='number' min='0' placeholder='--Nhập số lượng--' name='amount' custom ref={register()} required></Form.Control>
                     </FormGroup></Col>
                     <Col><Button type='submit' variant="success">
                         Thêm
