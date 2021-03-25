@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react'
-import {Button, Row, Col, Modal, Form, Container, Card, Badge} from 'react-bootstrap'
+import {Button, Row, Col, Modal, Form, Container, Card, Badge, FormGroup} from 'react-bootstrap'
 import {useForm} from 'react-hook-form'
 
-import {deleteDataFromServer, getDataFromServer} from './Common'
+import {deleteDataFromServer, getDataFromServer, putDataToServer} from './Common'
 export const ModalForm = ()=>{
     const [showModal, setShowModal]=useState(false);
     const {handleSubmit, register} = useForm()
@@ -83,20 +83,18 @@ export const ModalAlert=()=>{
 export const ModalInvoice=()=>{
     const [showModal, setShowModal]=useState(false);
     const [cart, setCart] = useState([])
-
-    const {handleSubmit, register} = useForm()
     const handleClose=()=> setShowModal(false)
     const handleShow=()=> setShowModal(true)
 
-    const getComponent=(updateUserCart)=>{
+    const getComponent=(updateUserCart, customerId)=>{
         return(
-            <Modal animation={false} show={showModal} onHide={handleClose}>
+            <Modal animation={false} show={showModal} onHide={handleClose} size='lg'>
             <Modal.Header closeButton>
                 <Modal.Title>Hóa đơn</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Product type={1} data={cart} updateCart={updateUserCart}/>
-                <Product type={2} data={cart} updateCart={updateUserCart}/>
+                <Product type={1} data={cart} updateCart={updateUserCart} customerId={customerId}/>
+                <Product type={2} data={cart} updateCart={updateUserCart} customerId={customerId}/>
             </Modal.Body>
             </Modal>
         )
@@ -111,15 +109,64 @@ export const ModalInvoice=()=>{
 }
 
 const Product=(props)=>{
-    let {type, data, updateCart} = props
+    let {type, data, updateCart, customerId} = props
+    let [product, setProduct] = useState([])
+    let {handleSubmit, register} = useForm()
+    let [selectedProduct, setSelectedProduct] = useState(null)
+    useEffect(()=>{
+        const fetchData=async()=>{
+            const data=await getDataFromServer('/api/product/all')
+            setProduct(data.data)
+        }
+        fetchData()
+    }, [])
+    const handleChange=(e)=>{
+        let userSelectedProduct = product.filter(value=>value.name===e.target.value)
+        setSelectedProduct(userSelectedProduct[0])
+    }
     const deleteDeal= async (dealId)=>{
         await deleteDataFromServer(`/api/customer/cart/${dealId}`)
+        updateCart()
+    }
+    const onSubmit = async data=>{
+        data.productId = selectedProduct._id
+        data.type = parseInt(data.type)
+        data.amount = parseInt(data.amount)
+        data.buyInto = type===1?true:false
+        await putDataToServer(`/api/customer/${customerId}/addToCart`, data)
         updateCart()
     }
     return(
         <Container>
             <Badge variant={type===1?'warning':'success'}>{type===1?'Mua vào':'Bán ra'}</Badge>
             <Container className='border border-success'>
+            <Container>
+            <Form onSubmit={handleSubmit(onSubmit)}><Row>
+                <Col><Form.Group>
+                        <Form.Control as='select' size='sm' custom onChange={handleChange}>
+                            <option>--Chọn sản phẩm--</option>
+                            {product.map((value, index)=>{
+                                return(
+                                    <option key={index}>{value.name}</option>
+                                )
+                            })}
+                        </Form.Control>
+                    </Form.Group></Col>
+                    <Col><Form.Group>
+                        <Form.Control as='select' size='sm' name='type' custom ref={register()}>
+                            {selectedProduct?selectedProduct.classification.map((value, index)=>{
+                                return <option key={index} value={value.type}>{value.type}</option>
+                            }):<option>--Loại--</option>}
+                        </Form.Control>
+                    </Form.Group></Col>
+                    <Col><FormGroup>
+                    <Form.Control type='number' min='0' placeholder='Nhập số lượng' name='amount' custom ref={register()} required></Form.Control>
+                    </FormGroup></Col>
+                    <Col><Button type='submit' variant="success">
+                        Thêm
+                    </Button></Col>
+                </Row></Form>
+            </Container>
             {data.filter(value=>type===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
                     return(
                         <Container key={index} className='border-bottom'>

@@ -52,9 +52,9 @@ const Customer=()=>{
                                                 setCustomer(customer._id)
                                             }}>Xóa</Button>
                                         </Row>
-                                        <Card.Text>Address</Card.Text>
-                                        <Card.Text>Phone: {Math.random()}</Card.Text>
-                                        <Card.Text>Tổng tiền: {Math.random()}</Card.Text>
+                                        <Card.Text>Address: {customer.address}</Card.Text>
+                                        <Card.Text>Phone: {customer.phone}</Card.Text>
+                                        {/* <Card.Text>Tổng tiền: {Math.random()}</Card.Text> */}
                                     </Card.Body>
                                 </Card>
                             </Container>
@@ -63,7 +63,7 @@ const Customer=()=>{
                 )
             })}
         {modalAlert.getComponent('Thông báo', 'Bạn có chắc chắn muốn xóa khách hàng và toàn bộ đơn hàng của khách hàng này không?', ()=>handleDeleteCustomer(customer))}
-        {modalInvoice.getComponent(()=>getCustomerCart(customer))}
+        {modalInvoice.getComponent(()=>getCustomerCart(customer), customer)}
         </Container>
     )
 }

@@ -50,7 +50,13 @@ export const deleteDataFromServer=async (link)=>{
         console.log(error)
     })
 }
-
+export const putDataToServer=async (link ,data)=>{
+    await axios.put(process.env.REACT_APP_API_URL+link, data).then(res=>{
+        console.log(res)
+    }).catch(error=>{
+        console.log(error)
+    })
+}
 // export const getIdUser=(user)=>{
 //     axios.get('//45.119.213.117:5000/api/v1/account/all', {
 //         headers:{
