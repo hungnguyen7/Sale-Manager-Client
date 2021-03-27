@@ -29,7 +29,7 @@ const Customer=()=>{
     const getCustomerCart=async id =>{
         console.log(id)
         let data = await getDataFromServer(`/api/customer/${id}/cart`)
-        modalInvoice.setCart(data.data)
+        modalInvoice.setCart(data.data.cart)
     }
     return(
         <Container>

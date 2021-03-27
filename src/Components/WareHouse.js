@@ -45,12 +45,11 @@ const WareHouse=()=>{
     }
 
     const onAddType=async data=>{
-        data.name = product.name
         data.amount = parseInt(data.amount)
         data.purchasePrice = parseInt(data.purchasePrice)
         data.salePrice = parseInt(data.purchasePrice)
         data.type = parseInt(data.type)
-        await postDataToServer('/api/product/create', data)
+        await patchDataToServer(`/api/product/${product.id}/addType`, data)
         modalForm.handleClose()
         updateData.updateIt()
     }
@@ -74,7 +73,7 @@ const WareHouse=()=>{
                                 <Card.Body>
                                     <Row className='mb-2'>
                                         <Card.Title className='text-white'>{product.name}</Card.Title>
-                                        <Button variant="primary" className="ml-auto" onClick={()=>{modalForm.handleShow(); setProduct({name: product.name})}}>Thêm</Button>
+                                        <Button variant="primary" className="ml-auto" onClick={()=>{modalForm.handleShow(); setProduct({id: product._id})}}>Thêm</Button>
                                         <Button variant="danger" className='ml-1' onClick={()=>{modalAlert.handleShow(); setProduct({id: product._id})}}>Xóa</Button>
                                     </Row>
                                     <Row>

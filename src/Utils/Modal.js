@@ -24,6 +24,12 @@ export const ModalForm = ()=>{
                                 ))}
                         </Form.Group>
                     </Form.Row>}
+                    {actionType==='Thêm'?
+                    <div>
+                    <Form.Label>Khối lượng</Form.Label>
+                    <Form.Control min='0' type='number' placeholder='Nhập khối lượng' name='amount' ref={register()}></Form.Control>
+                    </div>
+                    :''}
                     <Form.Label>Giá mua vào</Form.Label>
                     <Form.Control min='0' type='number' placeholder='Nhập giá mua vào' name='purchasePrice' ref={register()}></Form.Control>
                     <Form.Label>Giá bán ra</Form.Label>
@@ -172,7 +178,7 @@ const Product=(props)=>{
                             <Row>
                                 <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
                                 <Card.Text>Khối lượng: {value.amount}</Card.Text>
-                                <Button variant='primary' className='ml-auto btn-sm mb-2'>Sửa</Button>
+                                <Button variant='primary' className='ml-auto btn-sm mb-2' disabled>Sửa</Button>
                                 <Button variant='danger' className='ml-1 btn-sm mb-2' onClick={()=>deleteDeal(value._id)}>Xóa</Button>
                             </Row>
                         </Container>
