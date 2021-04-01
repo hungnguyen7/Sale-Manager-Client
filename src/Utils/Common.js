@@ -57,10 +57,8 @@ export const putDataToServer=async (link ,data)=>{
         console.log(error)
     })
 }
-// export const getIdUser=(user)=>{
-//     axios.get('//45.119.213.117:5000/api/v1/account/all', {
-//         headers:{
-//             'Authorization': `Bearer ${getToken()}`,
-//           }
-//     }).then(res=>res).catch(err=>console.log(err))
-// }
+export const numberWithCommas=x=> {
+    if(!x)
+        return 0
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }

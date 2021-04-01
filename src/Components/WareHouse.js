@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {getDataFromServer, deleteDataFromServer, patchDataToServer} from '../Utils/Common'
+import {getDataFromServer, deleteDataFromServer, patchDataToServer, numberWithCommas} from '../Utils/Common'
 import {Card, Button, Container, Row, Col, Alert} from 'react-bootstrap'
 import {TextAlert, UpdateData} from '../Utils/ManagementState'
 import {ModalAlert, ModalForm} from '../Utils/Modal'
@@ -85,9 +85,9 @@ const WareHouse=()=>{
                                                             <Card>
                                                                 <Card.Title className='text-center pb-3 mb-0 pt-3' style={productDetail.type===1?{backgroundColor: '#FF546B'}:productDetail.type===2?{backgroundColor: '#17D0B7'}:{backgroundColor: '#00DEDE'}}>Loại: {productDetail.type}</Card.Title>
                                                                 <Card.Body style={{backgroundColor: '#F6F6F6'}}>
-                                                                    <Card.Text>Khối lượng: {productDetail.amount}</Card.Text>
-                                                                    <Card.Text className='text-green-600'>Giá mua vào: {productDetail.purchasePrice}</Card.Text>
-                                                                    <Card.Text>Giá bán ra: {productDetail.salePrice}</Card.Text>
+                                                                    <Card.Text>Khối lượng: {numberWithCommas(productDetail.amount)} &#13199;</Card.Text>
+                                                                    <Card.Text className='text-green-600'>Giá mua vào: {numberWithCommas(productDetail.purchasePrice)} &#8363;</Card.Text>
+                                                                    <Card.Text>Giá bán ra: {numberWithCommas(productDetail.salePrice)} &#8363;</Card.Text>
                                                                     <Container>
                                                                         <Row>
                                                                             <Card.Link onClick={()=>{modalFormForTypeOfProduct.handleShow(); setProduct({id: product._id, type: productDetail.type})}}>Sửa</Card.Link>

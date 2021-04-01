@@ -2,10 +2,8 @@ import {useState, useEffect} from 'react'
 import {Button, Row, Col, Modal, Form, Container, Card, Badge, FormGroup} from 'react-bootstrap'
 import {useForm} from 'react-hook-form'
 
-import {deleteDataFromServer, getDataFromServer, putDataToServer} from './Common'
-const numberWithCommas=x=> {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
+import {deleteDataFromServer, getDataFromServer, putDataToServer, numberWithCommas} from './Common'
+
 export const ModalForm = ()=>{
     const [showModal, setShowModal]=useState(false);
     const {handleSubmit, register} = useForm()
