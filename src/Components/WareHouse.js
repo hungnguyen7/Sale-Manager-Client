@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 
-import {getDataFromServer, deleteDataFromServer, postDataToServer, patchDataToServer} from '../Utils/Common'
+import {getDataFromServer, deleteDataFromServer, patchDataToServer} from '../Utils/Common'
 import {Card, Button, Container, Row, Col, Alert} from 'react-bootstrap'
 import {TextAlert, UpdateData} from '../Utils/ManagementState'
 import {ModalAlert, ModalForm} from '../Utils/Modal'

@@ -3,6 +3,9 @@ import {Button, Row, Col, Modal, Form, Container, Card, Badge, FormGroup} from '
 import {useForm} from 'react-hook-form'
 
 import {deleteDataFromServer, getDataFromServer, putDataToServer} from './Common'
+const numberWithCommas=x=> {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
 export const ModalForm = ()=>{
     const [showModal, setShowModal]=useState(false);
     const {handleSubmit, register} = useForm()
@@ -87,6 +90,7 @@ export const ModalAlert=()=>{
 export const ModalInvoice=()=>{
     const [showModal, setShowModal]=useState(false);
     const [cart, setCart] = useState([])
+    const [orderPrice, setOrderPrice] = useState(0)
     const handleClose=()=> setShowModal(false)
     const handleShow=()=> setShowModal(true)
 
@@ -100,6 +104,12 @@ export const ModalInvoice=()=>{
                 <Product buyOrSell={1} data={cart} updateCart={updateUserCart} customerId={customerId}/>
                 <Product buyOrSell={2} data={cart} updateCart={updateUserCart} customerId={customerId}/>
             </Modal.Body>
+            <details>
+                <summary><h4 className='text-center pb-3'>Tổng tiền: {numberWithCommas(orderPrice)} &#8363;</h4></summary>
+                <p>Tổng tiền {`>`} 0: Thu tiền của khách</p>
+                <p>Tổng tiền {`<`} 0: Trả tiền của khách</p>
+
+            </details>
             </Modal>
         )
     }
@@ -108,6 +118,7 @@ export const ModalInvoice=()=>{
         handleClose,
         handleShow,
         setCart,
+        setOrderPrice,
         getComponent
     }
 }
@@ -167,7 +178,7 @@ const Product=(props)=>{
                     </Button></Col>
                 </Row></Form>
             </Container>
-            {data.filter(value=>buyOrSell===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
+                {data.filter(value=>buyOrSell===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
                     return(
                         <ProductDetail key={index} value={value} buyOrSell={buyOrSell} updateCart={updateCart}/>
                     )
@@ -184,6 +195,7 @@ const ProductDetail = (props)=>{
         await deleteDataFromServer(`/api/customer/cart/${dealId}`)
         updateCart()
     }
+    const [productInStore] = value.productId.classification.filter(productInStore=>productInStore.type===value.type)    
     return(
         <Container className='border-bottom'>
             <Row>
@@ -192,6 +204,8 @@ const ProductDetail = (props)=>{
             <Row>
                 <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
                 <Card.Text>Khối lượng: {value.amount}</Card.Text>
+                <Card.Text className='ml-auto'>Đơn giá: {buyOrSell===1?numberWithCommas(productInStore.purchasePrice): numberWithCommas(productInStore.salePrice)}</Card.Text>
+                <Card.Text className='ml-auto'>Tổng tiền: {buyOrSell===1?numberWithCommas(productInStore.purchasePrice*value.amount): numberWithCommas(productInStore.salePrice*value.amount)} &#8363;</Card.Text>
                 {/* <Button variant='primary' className='ml-auto btn-sm mb-2' onClick={()=>setEditStatus(true)}>Sửa</Button> */}
                 <Button variant='danger' className='ml-auto btn-sm mb-2' onClick={()=>deleteDeal(value._id)}>Xóa</Button>
             </Row>

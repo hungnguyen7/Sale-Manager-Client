@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
-import {Card, Container, Row, Col, Alert, Button} from 'react-bootstrap'
+import {Card, Container, Row, Col, Button} from 'react-bootstrap'
 import {getDataFromServer, deleteDataFromServer} from '../Utils/Common'
-import {TextAlert, UpdateData} from '../Utils/ManagementState'
+import {UpdateData} from '../Utils/ManagementState'
 import {ModalAlert, ModalInvoice} from '../Utils/Modal'
 const Customer=()=>{
     const [customerList, setCustomerList] = useState([])
@@ -27,8 +27,10 @@ const Customer=()=>{
     }
 
     const getCustomerCart=async id =>{
-        console.log(id)
         let data = await getDataFromServer(`/api/customer/${id}/cart`)
+        let count = await getDataFromServer(`/api/customer/${id}/getBill`)
+        console.log(count.data)
+        modalInvoice.setOrderPrice(count.data.totalPrice)
         modalInvoice.setCart(data.data.cart)
     }
     return(
