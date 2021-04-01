@@ -97,8 +97,8 @@ export const ModalInvoice=()=>{
                 <Modal.Title>Hóa đơn</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Product type={1} data={cart} updateCart={updateUserCart} customerId={customerId}/>
-                <Product type={2} data={cart} updateCart={updateUserCart} customerId={customerId}/>
+                <Product buyOrSell={1} data={cart} updateCart={updateUserCart} customerId={customerId}/>
+                <Product buyOrSell={2} data={cart} updateCart={updateUserCart} customerId={customerId}/>
             </Modal.Body>
             </Modal>
         )
@@ -113,7 +113,7 @@ export const ModalInvoice=()=>{
 }
 
 const Product=(props)=>{
-    let {type, data, updateCart, customerId} = props
+    let {buyOrSell, data, updateCart, customerId} = props
     let [product, setProduct] = useState([])
     let {handleSubmit, register} = useForm()
     let [selectedProduct, setSelectedProduct] = useState(null)
@@ -128,21 +128,17 @@ const Product=(props)=>{
         let userSelectedProduct = product.filter(value=>value.name===e.target.value)
         setSelectedProduct(userSelectedProduct[0])
     }
-    const deleteDeal= async (dealId)=>{
-        await deleteDataFromServer(`/api/customer/cart/${dealId}`)
-        updateCart()
-    }
     const onSubmit = async data=>{
         data.productId = selectedProduct._id
         data.type = parseInt(data.type)
         data.amount = parseInt(data.amount)
-        data.buyInto = type===1?true:false
+        data.buyInto = buyOrSell===1?true:false
         await putDataToServer(`/api/customer/${customerId}/addToCart`, data)
         updateCart()
     }
     return(
         <Container>
-            <Badge variant={type===1?'warning':'success'}>{type===1?'Mua vào':'Bán ra'}</Badge>
+            <Badge variant={buyOrSell===1?'warning':'success'}>{buyOrSell===1?'Mua vào':'Bán ra'}</Badge>
             <Container className='border border-success'>
             <Container className='bg-light pt-3'>
             <Form onSubmit={handleSubmit(onSubmit)}><Row>
@@ -171,20 +167,34 @@ const Product=(props)=>{
                     </Button></Col>
                 </Row></Form>
             </Container>
-            {data.filter(value=>type===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
+            {data.filter(value=>buyOrSell===1?value.buyInto===true: value.buyInto===false).map((value, index)=>{
                     return(
-                        <Container key={index} className='border-bottom'>
-                            <Row><Card.Title className={type===1?'bg-warning':'bg-success'}>{value.productId.name}</Card.Title></Row>
-                            <Row>
-                                <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
-                                <Card.Text>Khối lượng: {value.amount}</Card.Text>
-                                <Button variant='primary' className='ml-auto btn-sm mb-2' disabled>Sửa</Button>
-                                <Button variant='danger' className='ml-1 btn-sm mb-2' onClick={()=>deleteDeal(value._id)}>Xóa</Button>
-                            </Row>
-                        </Container>
+                        <ProductDetail key={index} value={value} buyOrSell={buyOrSell} updateCart={updateCart}/>
                     )
                 })}
             </Container>
+        </Container>
+    )
+}
+
+const ProductDetail = (props)=>{
+    // const [editStatus, setEditStatus] = useState(false)
+    const {value, buyOrSell, updateCart} = props
+    const deleteDeal= async (dealId)=>{
+        await deleteDataFromServer(`/api/customer/cart/${dealId}`)
+        updateCart()
+    }
+    return(
+        <Container className='border-bottom'>
+            <Row>
+                <Card.Title className={buyOrSell===1?'bg-warning':'bg-success'}>{value.productId.name}</Card.Title>
+            </Row>
+            <Row>
+                <Card.Text className='mr-5'>Loại: {value.type}</Card.Text>
+                <Card.Text>Khối lượng: {value.amount}</Card.Text>
+                {/* <Button variant='primary' className='ml-auto btn-sm mb-2' onClick={()=>setEditStatus(true)}>Sửa</Button> */}
+                <Button variant='danger' className='ml-auto btn-sm mb-2' onClick={()=>deleteDeal(value._id)}>Xóa</Button>
+            </Row>
         </Container>
     )
 }
